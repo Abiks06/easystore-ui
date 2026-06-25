@@ -1,0 +1,43 @@
+/* PageHeading Stylesheet */
+
+.page-heading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.page-heading-desc {
+  font-family: var(--font-family);
+  font-size: clamp(var(--font-size-base), 2vw, var(--font-size-lg));
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 680px;
+  margin: calc(-1 * var(--space-4)) auto var(--space-8) auto; /* Adjust spacing to pull it up slightly closer to the title's underline */
+  padding: 0 var(--space-6);
+  opacity: 0.9;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 150ms;
+}
+
+/* Subtle fadeInUp entrance animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .page-heading-desc {
+    animation: none;
+  }
+}

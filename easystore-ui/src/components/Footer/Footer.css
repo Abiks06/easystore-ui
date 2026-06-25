@@ -1,0 +1,59 @@
+/* ===================================
+   Minimalist Footer Styles
+   =================================== */
+
+.footer {
+  padding: var(--space-8) var(--space-4);
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-light);
+  background: transparent;
+  border-top: 1px solid var(--border-light);
+}
+
+.footer a {
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-decoration: none;
+  margin-left: 0.25rem;
+  transition: color var(--transition-fast);
+}
+
+.footer a:hover {
+  color: var(--primary-dark);
+}
+
+.footer-icon {
+  color: var(--error); /* Restored vibrant red */
+  font-size: 0.9rem;
+  margin: 0 0.3rem;
+  display: inline-block;
+  animation: smooth-heartbeat 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.4));
+}
+
+@keyframes smooth-heartbeat {
+  0% { transform: scale(1); }
+  12% { transform: scale(1.15); }
+  24% { transform: scale(1); }
+  36% { transform: scale(1.15); }
+  48%, 100% { transform: scale(1); }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .footer-icon {
+    animation: none;
+    filter: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: var(--space-6) var(--space-4);
+  }
+}

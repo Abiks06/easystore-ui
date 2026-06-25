@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "dev": "cd easystore-ui && npm run dev",
+    "build": "cd easystore-ui && npm run build",
+    "lint": "cd easystore-ui && npm run lint",
+    "preview": "cd easystore-ui && npm run preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.2.0",
+    "@fortawesome/free-brands-svg-icons": "^7.2.0",
+    "@fortawesome/free-regular-svg-icons": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^7.2.0",
+    "node": "^26.3.0"
+  }
+}
