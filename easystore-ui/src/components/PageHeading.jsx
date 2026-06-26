@@ -1,5 +1,4 @@
 import PageTitle from "../PageTitle/PageTitle";
-import "./PageHeading.css";
 
 function PageHeading({ title, children }) {
   return (
