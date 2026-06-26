@@ -1,11 +1,11 @@
-import PageHeading from "./PageHeading/PageHeading";
+import PageHeading from "./PageHeading";
 import ProductListing from "./ProductListing";
 import products from "../Data/products";
 
 function Home() {
   return (
     <>
-      <PageHeading title="Abiks' Stickers">
+      <PageHeading title="Abiks' Store">
         Our sticker store offers a curated collection of high-quality, creative
         designs that bring personality and flair to everyday items. From trendy
         aesthetics to custom creations, we focus on delivering durable, vibrant

@@ -1,4 +1,4 @@
-import Footer from "./components/Footer/footer";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Home from "./components/Home";
 
