@@ -7,7 +7,7 @@ const Header = () => {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Brand */}
         <a href="./" className="flex items-center gap-2.5 group no-underline">
-          <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-500 shadow-md group-hover:shadow-violet-300 transition-shadow duration-300">
+          <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-linear-to-br from-violet-600 to-indigo-500 shadow-md group-hover:shadow-violet-300 transition-shadow duration-300">
             <FontAwesomeIcon icon={faTags} className="text-white text-sm" />
           </span>
           <span className="brand-shimmer text-xl font-bold tracking-tight">
@@ -31,7 +31,7 @@ const Header = () => {
             <li>
               <a
                 href="/cart"
-                className="anim-pulse-ring flex items-center gap-2 ml-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-500 rounded-xl shadow-md hover:shadow-violet-300 hover:scale-105 transition-all duration-300 no-underline group"
+                className="anim-pulse-ring flex items-center gap-2 ml-2 px-4 py-2 text-sm font-semibold text-white bg-linear-to-r from-violet-600 to-indigo-500 rounded-xl shadow-md hover:shadow-violet-300 hover:scale-105 transition-all duration-300 no-underline group"
               >
                 <FontAwesomeIcon icon={faShoppingBasket} className="text-sm transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-125" />
                 Cart

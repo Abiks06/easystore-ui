@@ -46,7 +46,7 @@ function ProductCard({ product }) {
 
         <button
           disabled={!product.inStock}
-          className="group mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-500 shadow hover:shadow-violet-300 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none cursor-pointer"
+          className="group mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-violet-600 to-indigo-500 shadow hover:shadow-violet-300 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none cursor-pointer"
         >
           <FontAwesomeIcon icon={faShoppingBasket} className="transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-125 group-disabled:group-hover:rotate-0 group-disabled:group-hover:scale-100" />
           {product.inStock ? "Add to Cart" : "Unavailable"}
