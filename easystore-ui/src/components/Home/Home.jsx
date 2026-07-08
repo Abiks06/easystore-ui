@@ -1,6 +1,6 @@
-import PageHeading from "./PageHeading";
+import PageHeading from "../PageHeading";
 import ProductListing from "./ProductListing";
-import products from "../Data/products";
+import products from "../../Data/products";
 
 function Home() {
   return (
