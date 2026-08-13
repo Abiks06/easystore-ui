@@ -12,7 +12,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 text-sm font-medium text-violet-700"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-zinc-200 bg-white/50 mb-8 text-sm font-medium text-zinc-600"
         >
           <Sparkles className="w-4 h-4" />
           <span>New Summer Collection Available</span>
@@ -22,7 +22,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6"
+          className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-900 mb-6"
         >
           Everything You Need,{" "}
           <span className="brand-shimmer">Elevated</span>{" "}
@@ -32,7 +32,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-          className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed"
+          className="text-lg md:text-xl text-zinc-500 mb-10 max-w-2xl mx-auto leading-relaxed"
         >
           Discover our curated collection of premium electronics, beauty essentials, lifestyle goods, and more. Quality without compromise.
         </motion.p>
@@ -43,18 +43,14 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link href="/shop" className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl font-semibold shadow-xl shadow-slate-900/20 hover:scale-105 transition-all duration-300 no-underline">
+          <Link href="/shop" className="flex items-center gap-2 px-8 py-4 bg-zinc-900 text-white rounded-2xl font-semibold shadow-lg hover:bg-zinc-800 transition-all duration-300 no-underline">
             Shop Now <ArrowRight className="w-5 h-5" />
           </Link>
-          <Link href="/collections" className="px-8 py-4 bg-white text-slate-700 rounded-2xl font-semibold shadow-lg shadow-slate-200/50 border border-slate-100 hover:scale-105 transition-all duration-300 no-underline">
+          <Link href="/collections" className="px-8 py-4 bg-white text-zinc-900 rounded-2xl font-semibold shadow-sm border border-zinc-200 hover:border-zinc-300 transition-all duration-300 no-underline">
             View Gallery
           </Link>
         </motion.div>
       </div>
-
-      {/* Decorative Blobs */}
-      <div className="absolute top-1/2 left-1/4 w-72 h-72 bg-violet-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 anim-blob" />
-      <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-fuchsia-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 anim-blob" style={{ animationDelay: "2s" }} />
     </section>
   );
 }

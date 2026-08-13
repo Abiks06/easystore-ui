@@ -45,8 +45,8 @@ export default async function CollectionsPage() {
           
           {groupedProducts[category].length > 4 && (
             <div className="mt-8 text-center">
-              <a href={`/shop`} className="inline-flex items-center justify-center px-6 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
-                View more {category}
+              <a href={`/collections/${encodeURIComponent(category)}`} className="inline-flex items-center justify-center px-6 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                View more {category.replace("-", " ")}
               </a>
             </div>
           )}
