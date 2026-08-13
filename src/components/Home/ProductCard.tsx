@@ -89,7 +89,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-auto flex items-center justify-between">
           <span className="text-xl font-bold text-zinc-900">
-            ${product.price.toFixed(2)}
+            GH₵{product.price.toFixed(2)}
           </span>
           <button
             disabled={!product.inStock}

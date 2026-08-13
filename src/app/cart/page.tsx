@@ -60,7 +60,7 @@ export default function CartPage() {
                 <div className="flex-1">
                   <h3 className="font-bold text-slate-800 text-lg line-clamp-1">{item.productName}</h3>
                   <p className="text-sm text-slate-500 mb-2">{item.category}</p>
-                  <p className="font-bold text-violet-700">${item.price.toFixed(2)}</p>
+                  <p className="font-bold text-violet-700">GH₵{item.price.toFixed(2)}</p>
                 </div>
                 <div className="absolute top-6 right-6">
                   <button 
@@ -97,7 +97,7 @@ export default function CartPage() {
               <div className="space-y-4 text-sm text-slate-600 mb-6">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-medium text-slate-900">${getSubtotal().toFixed(2)}</span>
+                  <span className="font-medium text-slate-900">GH₵{getSubtotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -106,7 +106,7 @@ export default function CartPage() {
                 <div className="h-px w-full bg-slate-200 my-4" />
                 <div className="flex justify-between text-base">
                   <span className="font-bold text-slate-900">Total</span>
-                  <span className="font-bold text-violet-700">${getSubtotal().toFixed(2)}</span>
+                  <span className="font-bold text-violet-700">GH₵{getSubtotal().toFixed(2)}</span>
                 </div>
               </div>
               <button 

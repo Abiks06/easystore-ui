@@ -67,7 +67,7 @@ export default async function ProductDetails({ params }: { params: Promise<{ id:
           </div>
           
           <p className="text-4xl font-bold text-violet-700 mb-8">
-            ${product.price.toFixed(2)}
+            GH₵{product.price.toFixed(2)}
           </p>
           
           <div className="prose prose-slate mb-10">
