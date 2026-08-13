@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
+import { useCartStore } from "@/store/useCartStore";
+import toast from "react-hot-toast";
 
 export interface Product {
   productId: number;
@@ -17,6 +19,19 @@ export interface Product {
 }
 
 export default function ProductCard({ product }: { product: Product }) {
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast.success(`${product.productName} added to cart!`, {
+      style: {
+        borderRadius: '12px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+  };
+
   return (
     <motion.div
       whileHover={{ y: -8 }}
@@ -64,6 +79,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
           <button
             disabled={!product.inStock}
+            onClick={handleAddToCart}
             className={`w-10 h-10 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300
               ${
                 product.inStock

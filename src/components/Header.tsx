@@ -2,13 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Tag, ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
+import { ShoppingBag, Tag } from "lucide-react";
+import { useCartStore } from "@/store/useCartStore";
+import { useEffect, useState } from "react";
 
 const navLinks = ["Home", "About", "Contact", "Login"];
 
 export default function Header() {
   const pathname = usePathname();
+  const getTotalItems = useCartStore((state) => state.getTotalItems);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <header className="anim-header sticky top-0 z-50 pt-4 px-6 pb-2">
@@ -55,10 +63,15 @@ export default function Header() {
             <li>
               <Link
                 href="/cart"
-                className="anim-pulse-ring flex items-center gap-2 ml-2 px-4 py-2 text-sm font-semibold text-white bg-linear-to-r from-violet-600 to-fuchsia-500 rounded-xl shadow-md hover:shadow-violet-300/50 hover:scale-105 transition-all duration-300 no-underline group"
+                className="anim-pulse-ring flex items-center gap-2 ml-2 px-4 py-2 text-sm font-semibold text-white bg-linear-to-r from-violet-600 to-fuchsia-500 rounded-xl shadow-md hover:shadow-violet-300/50 hover:scale-105 transition-all duration-300 no-underline group relative"
               >
                 <ShoppingBag className="w-4 h-4 transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110" />
                 Cart
+                {mounted && getTotalItems() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-slate-900 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm">
+                    {getTotalItems()}
+                  </span>
+                )}
               </Link>
             </li>
           </ul>
