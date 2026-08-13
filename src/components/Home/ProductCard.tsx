@@ -5,6 +5,7 @@ import { ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import { useCartStore } from "@/store/useCartStore";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export interface Product {
   productId: number;
@@ -21,7 +22,9 @@ export interface Product {
 export default function ProductCard({ product }: { product: Product }) {
   const addToCart = useCartStore((state) => state.addToCart);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     addToCart(product);
     toast.success(`${product.productName} added to cart!`, {
       style: {
@@ -33,12 +36,13 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <motion.div
-      whileHover={{ y: -8 }}
-      className="glass-card rounded-3xl overflow-hidden group flex flex-col h-full relative"
-    >
-      {/* Image Container */}
-      <div className="relative aspect-square w-full bg-slate-50/50 p-6 flex items-center justify-center overflow-hidden">
+    <Link href={`/product/${product.productId}`} className="block h-full group no-underline">
+      <motion.div
+        whileHover={{ y: -8 }}
+        className="glass-card rounded-3xl overflow-hidden group flex flex-col h-full relative"
+      >
+        {/* Image Container */}
+        <div className="relative aspect-square w-full bg-slate-50/50 p-6 flex items-center justify-center overflow-hidden">
         {/* Glow effect on hover */}
         <div className="absolute inset-0 bg-linear-to-tr from-violet-200/40 to-fuchsia-200/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
@@ -92,6 +96,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </button>
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }

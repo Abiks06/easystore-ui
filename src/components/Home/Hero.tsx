@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -44,12 +45,12 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <button className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl font-semibold shadow-xl shadow-slate-900/20 hover:scale-105 transition-all duration-300">
+          <Link href="#products" className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl font-semibold shadow-xl shadow-slate-900/20 hover:scale-105 transition-all duration-300 no-underline">
             Shop Now <ArrowRight className="w-5 h-5" />
-          </button>
-          <button className="px-8 py-4 bg-white text-slate-700 rounded-2xl font-semibold shadow-lg shadow-slate-200/50 border border-slate-100 hover:scale-105 transition-all duration-300">
+          </Link>
+          <Link href="#products" className="px-8 py-4 bg-white text-slate-700 rounded-2xl font-semibold shadow-lg shadow-slate-200/50 border border-slate-100 hover:scale-105 transition-all duration-300 no-underline">
             View Gallery
-          </button>
+          </Link>
         </motion.div>
       </div>
 

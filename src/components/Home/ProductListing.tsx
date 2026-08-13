@@ -31,7 +31,7 @@ export default function ProductListing({ products }: { products: Product[] }) {
   }
 
   return (
-    <section className="px-6 py-12 pb-24 relative z-10">
+    <section id="products" className="px-6 py-12 pb-24 relative z-10 scroll-mt-24">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-end justify-between mb-10">
           <div>
