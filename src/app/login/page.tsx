@@ -17,7 +17,7 @@ export default function LoginPage() {
             </div>
             <input type="password" className="w-full px-4 py-3 rounded-xl bg-white/50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all" placeholder="••••••••" />
           </div>
-          <button type="button" className="mt-4 w-full py-4 bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white rounded-xl font-semibold shadow-lg shadow-violet-200 hover:scale-[1.02] transition-transform duration-300">
+          <button type="button" className="mt-4 w-full py-4 bg-linear-to-r from-violet-600 to-fuchsia-500 text-white rounded-xl font-semibold shadow-lg shadow-violet-200 hover:scale-[1.02] transition-transform duration-300">
             Sign In
           </button>
         </form>

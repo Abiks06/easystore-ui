@@ -25,7 +25,7 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Image Container */}
       <div className="relative aspect-square w-full bg-slate-50/50 p-6 flex items-center justify-center overflow-hidden">
         {/* Glow effect on hover */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-violet-200/40 to-fuchsia-200/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-linear-to-tr from-violet-200/40 to-fuchsia-200/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         <Image
           src={product.imageUrl}

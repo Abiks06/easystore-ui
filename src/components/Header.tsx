@@ -15,7 +15,7 @@ export default function Header() {
       <div className="glass max-w-6xl mx-auto px-6 py-3 rounded-2xl flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5 group no-underline">
-          <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 shadow-md group-hover:shadow-violet-300/50 transition-shadow duration-300">
+          <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-linear-to-br from-violet-600 to-fuchsia-500 shadow-md group-hover:shadow-violet-300/50 transition-shadow duration-300">
             <Tag className="text-white w-4 h-4" />
           </span>
           <span className="brand-shimmer text-xl font-bold tracking-tight">
@@ -55,7 +55,7 @@ export default function Header() {
             <li>
               <Link
                 href="/cart"
-                className="anim-pulse-ring flex items-center gap-2 ml-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-fuchsia-500 rounded-xl shadow-md hover:shadow-violet-300/50 hover:scale-105 transition-all duration-300 no-underline group"
+                className="anim-pulse-ring flex items-center gap-2 ml-2 px-4 py-2 text-sm font-semibold text-white bg-linear-to-r from-violet-600 to-fuchsia-500 rounded-xl shadow-md hover:shadow-violet-300/50 hover:scale-105 transition-all duration-300 no-underline group"
               >
                 <ShoppingBag className="w-4 h-4 transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110" />
                 Cart
