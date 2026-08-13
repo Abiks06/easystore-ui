@@ -5,13 +5,16 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { ShoppingBag, Tag } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect, useState } from "react";
 
-const navLinks = ["Home", "About", "Contact", "Login"];
+const navLinks = ["Home", "Shop", "Collections", "About", "Contact"];
 
 export default function Header() {
   const pathname = usePathname();
   const getTotalItems = useCartStore((state) => state.getTotalItems);
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -60,6 +63,38 @@ export default function Header() {
                 </li>
               );
             })}
+            
+            {mounted && user ? (
+              <li>
+                <button
+                  onClick={logout}
+                  className="relative px-4 py-2 text-sm font-medium no-underline rounded-lg transition-colors duration-200 text-slate-600 hover:text-red-600 hover:bg-red-50"
+                >
+                  Logout
+                </button>
+              </li>
+            ) : mounted && !user ? (
+              <li>
+                <Link
+                  href="/login"
+                  className={`relative px-4 py-2 text-sm font-medium no-underline rounded-lg transition-colors duration-200 ${
+                    pathname === "/login"
+                      ? "text-violet-700"
+                      : "text-slate-600 hover:text-violet-700 hover:bg-violet-50/50"
+                  }`}
+                >
+                  Login
+                  {pathname === "/login" && (
+                    <motion.div
+                      layoutId="active-nav"
+                      className="absolute inset-0 bg-violet-100/60 rounded-lg -z-10"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              </li>
+            ) : null}
+
             <li>
               <Link
                 href="/cart"

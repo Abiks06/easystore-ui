@@ -5,10 +5,21 @@ import { Product } from "@/components/Home/ProductCard";
 import { useCartStore } from "@/store/useCartStore";
 import toast from "react-hot-toast";
 
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
+
 export default function ProductActions({ product }: { product: Product }) {
   const addToCart = useCartStore((state) => state.addToCart);
+  const user = useAuthStore((state) => state.user);
+  const router = useRouter();
 
   const handleAddToCart = () => {
+    if (!user) {
+      toast.error("Please log in to add to cart");
+      router.push("/login");
+      return;
+    }
+    
     addToCart(product);
     toast.success(`${product.productName} added to cart!`, {
       style: {

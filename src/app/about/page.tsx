@@ -5,19 +5,19 @@ export default function AboutPage() {
     {
       icon: <Star className="w-6 h-6 text-amber-500" />,
       title: "Premium Quality",
-      desc: "Top-tier vinyl materials that are waterproof, UV-resistant, and built to last.",
+      desc: "Top-tier products sourced from the best manufacturers around the world.",
       color: "bg-amber-100/50",
     },
     {
       icon: <Heart className="w-6 h-6 text-fuchsia-500" />,
-      title: "Creative Designs",
-      desc: "Every sticker is crafted by passionate artists who pour creativity into each design.",
+      title: "Curated Selection",
+      desc: "Every item is hand-picked by our team to ensure it meets our standard of excellence.",
       color: "bg-fuchsia-100/50",
     },
     {
       icon: <Truck className="w-6 h-6 text-emerald-500" />,
       title: "Fast Delivery",
-      desc: "Orders are packed with love and dispatched quickly to get to your door.",
+      desc: "Orders are packed with care and dispatched quickly to get to your door.",
       color: "bg-emerald-100/50",
     },
     {
@@ -29,9 +29,9 @@ export default function AboutPage() {
   ];
 
   const stats = [
-    { value: "2,500+", label: "Happy Customers" },
-    { value: "120+", label: "Unique Designs" },
-    { value: "98%", label: "Satisfaction Rate" },
+    { value: "10k+", label: "Happy Customers" },
+    { value: "1,000+", label: "Premium Products" },
+    { value: "99%", label: "Satisfaction Rate" },
     { value: "4.9★", label: "Average Rating" },
   ];
 
@@ -43,9 +43,8 @@ export default function AboutPage() {
           About <span className="brand-shimmer">Abiks' Store</span>
         </h1>
         <p className="text-lg text-slate-600 leading-relaxed">
-          We believe self-expression should be fun, vibrant, and accessible.
-          That's why we curate premium stickers that let you personalise
-          everything — laptops, water bottles, journals, and beyond.
+          We believe shopping for the best lifestyle products should be an elevated, seamless experience.
+          That's why we curate a wide range of premium electronics, beauty essentials, home goods, and beyond.
         </p>
       </section>
 
