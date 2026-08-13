@@ -1,11 +1,12 @@
 import Hero from "@/components/Home/Hero";
 import ProductListing from "@/components/Home/ProductListing";
 import { getProducts } from "@/lib/products";
+import { Product } from "@/components/Home/ProductCard";
 
 export const dynamic = "force-dynamic"; // Ensures the page is always dynamically rendered
 
 export default async function Home() {
-  let products = [];
+  let products: Product[] = [];
   try {
     products = await getProducts();
   } catch (error) {
