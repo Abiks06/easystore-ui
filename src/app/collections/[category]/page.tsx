@@ -15,7 +15,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   );
 
   return (
-    <main className="py-20 px-6 max-w-7xl mx-auto min-h-screen">
+    <main className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
       <Link href="/collections" className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 mb-8 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Collections
       </Link>

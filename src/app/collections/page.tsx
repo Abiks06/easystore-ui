@@ -16,7 +16,7 @@ export default async function CollectionsPage() {
   const categories = Object.keys(groupedProducts).sort();
 
   return (
-    <main className="py-20 px-6 max-w-7xl mx-auto min-h-screen">
+    <main className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
       <div className="mb-16 text-center anim-fade-up">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
           Collections

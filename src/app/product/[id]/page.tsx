@@ -15,7 +15,7 @@ export default async function ProductDetails({ params }: { params: Promise<{ id:
   }
 
   return (
-    <main className="py-12 px-6 max-w-6xl mx-auto min-h-[75vh]">
+    <main className="py-12 px-4 md:px-6 lg:px-8 max-w-6xl mx-auto min-h-[75vh]">
       <Link href="/#products" className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-violet-700 transition-colors mb-10 no-underline">
         <ArrowLeft className="w-4 h-4" /> Back to store
       </Link>

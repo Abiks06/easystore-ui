@@ -32,11 +32,11 @@ export default function CartPage() {
   };
 
   if (!mounted) {
-    return <main className="py-20 px-6 max-w-6xl mx-auto min-h-[70vh]"></main>;
+    return <main className="py-20 px-4 md:px-6 lg:px-8 max-w-6xl mx-auto min-h-[70vh]"></main>;
   }
 
   return (
-    <main className="py-20 px-6 max-w-6xl mx-auto min-h-[70vh]">
+    <main className="py-20 px-4 md:px-6 lg:px-8 max-w-6xl mx-auto min-h-[70vh]">
       <h1 className="text-3xl font-extrabold text-slate-900 mb-8 anim-fade-up">Your Cart</h1>
       
       {cartItems.length === 0 ? (

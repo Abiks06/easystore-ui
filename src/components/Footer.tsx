@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="anim-fade-up mt-auto border-t border-slate-200/60 bg-white/50 backdrop-blur-sm shadow-sm flex items-center justify-center gap-2 px-4 py-6 text-sm text-slate-500">
+    <footer className="anim-fade-up mt-auto border-t border-slate-200/60 bg-white/50 backdrop-blur-sm shadow-sm flex flex-wrap items-center justify-center text-center gap-2 px-4 py-6 text-sm text-slate-500">
       <span className="inline-flex items-center gap-2 text-slate-500">
         Made with{" "}
         <span className="anim-heart text-xl" aria-hidden="true" title="realistic beating heart">
