@@ -1,3 +1,10 @@
 {
-  "name": "EasyStore"
+  "name": "EasyStore",
+  "highlights": [
+    "Editorial storefront in Next.js 16 and React 19 with a filterable shop: search, category, brand, price, rating and sale filters with live counts, all kept in the URL so results can be shared.",
+    "Three-step checkout with delivery or store pickup and MTN MoMo, Telecel Cash or AirtelTigo Money, with inline validation for Ghana phone numbers.",
+    "A ⌘K command palette over every product and collection, a slide-out bag with undo and save-for-later, and product galleries with hover zoom and swipe on mobile.",
+    "All 100 product pages and 11 collections are prerendered with per-page metadata, JSON-LD and a sitemap; dark mode follows the system and never flashes on load."
+  ],
+  "keywords": ["Next.js", "React", "TypeScript", "Tailwind CSS", "Zustand", "Framer Motion"]
 }
