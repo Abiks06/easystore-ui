@@ -1,224 +1,154 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { ShoppingBag, ArrowRight, Trash2, ArrowLeft, User, Truck, Store, CreditCard } from "lucide-react";
 import Image from "next/image";
-import { useCartStore } from "@/store/useCartStore";
-import toast from "react-hot-toast";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Heart, Lock } from "lucide-react";
+import { toast } from "sonner";
+import { selectCount, selectSavings, selectSubtotal, useCart } from "@/store/cart";
+import { useWishlist } from "@/store/wishlist";
+import { useHydrated } from "@/lib/use-hydrated";
+import { categoryTile } from "@/lib/categories";
+import { deliveryFee, FREE_DELIVERY_THRESHOLD, formatPrice, pluralize } from "@/lib/format";
+import { Price, QuantityStepper } from "@/components/product/bits";
+import ProductCard from "@/components/product/ProductCard";
 
 export default function CartPage() {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, getSubtotal } = useCartStore();
-  const [mounted, setMounted] = useState(false);
-  
-  // Checkout State
-  const [isCheckout, setIsCheckout] = useState(false);
-  const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
-  const [checkoutData, setCheckoutData] = useState({
-    name: '', email: '', phone: '', address: '', city: '', cardNumber: '', expiry: '', cvv: ''
-  });
+  const hydrated = useHydrated();
+  const lines = useCart((s) => s.lines);
+  const count = useCart(selectCount);
+  const subtotal = useCart(selectSubtotal);
+  const savings = useCart(selectSavings);
+  const { setQuantity, remove, add } = useCart.getState();
+  const saved = useWishlist((s) => s.items);
+  const toggleSaved = useWishlist((s) => s.toggle);
+  const delivery = deliveryFee(subtotal);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleCheckout = () => {
-    if (cartItems.length === 0) return;
-    
-    if (!isCheckout) {
-      setIsCheckout(true);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    // Validate form if in checkout
-    if (!checkoutData.name || !checkoutData.email || !checkoutData.phone || !checkoutData.cardNumber || !checkoutData.expiry || !checkoutData.cvv) {
-      toast.error("Please fill in all required fields.");
-      return;
-    }
-    if (deliveryMethod === 'delivery' && (!checkoutData.address || !checkoutData.city)) {
-      toast.error("Please provide a delivery location.");
-      return;
-    }
-    
-    // Simulate checkout process
-    toast.success("Order placed successfully!", {
-      icon: '🎉',
-      style: {
-        borderRadius: '12px',
-        background: '#333',
-        color: '#fff',
-      },
-    });
-    
-    setIsCheckout(false);
-    clearCart();
-    setCheckoutData({
-      name: '', email: '', phone: '', address: '', city: '', cardNumber: '', expiry: '', cvv: ''
-    });
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckoutData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const inputClasses = "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all";
-
-  if (!mounted) {
-    return <main className="py-20 px-4 md:px-6 lg:px-8 max-w-6xl mx-auto min-h-[70vh]"></main>;
-  }
+  if (!hydrated) return <div className="container-x min-h-[70vh]" />;
 
   return (
-    <main className="py-20 px-4 md:px-6 lg:px-8 max-w-6xl mx-auto min-h-[70vh]">
-      <h1 className="text-3xl font-extrabold text-slate-900 mb-8 anim-fade-up">
-        {isCheckout ? "Checkout" : "Your Cart"}
+    <div className="container-x pt-12 md:pt-16">
+      <h1 className="display text-7xl md:text-9xl">
+        Your <em>bag</em>
       </h1>
-      
-      {cartItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-white shadow-sm">
-          <ShoppingBag className="w-16 h-16 text-slate-300 mb-4" />
-          <h2 className="text-xl font-bold text-slate-700 mb-2">Your cart is empty</h2>
-          <p className="text-slate-500 mb-6">Looks like you haven't added anything yet.</p>
-          <Link href="/" className="px-6 py-3 bg-violet-600 text-white rounded-xl font-semibold shadow-lg shadow-violet-200 hover:scale-105 transition-all">
-            Start Shopping
+      <p className="mt-3 text-muted">{lines.length ? pluralize(count, "item") : "Empty, for now."}</p>
+
+      {lines.length === 0 ? (
+        <div className="mt-12 rounded-[2rem] bg-surface p-10 md:p-16 text-center">
+          <p className="display text-5xl">Nothing in here yet.</p>
+          <p className="text-muted mt-3">The good stuff is a click away.</p>
+          <Link href="/shop" className="btn btn-primary mt-8 h-14 px-8">
+            Browse the shop <ArrowRight className="size-4" />
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col lg:flex-row gap-10">
-          {/* Main Content Area: Cart Items or Checkout Form */}
-          <div className="flex-1 anim-slide-up">
-            {!isCheckout ? (
-              <div className="space-y-6">
-                {cartItems.map((item) => (
-                  <div key={item.productId} className="glass-card rounded-3xl p-6 flex items-center gap-6 relative">
-                    <div className="w-24 h-24 bg-slate-50 rounded-2xl flex items-center justify-center p-2">
-                      <Image src={item.imageUrl} alt={item.productName} width={80} height={80} className="object-contain drop-shadow-md" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-slate-800 text-lg line-clamp-1">{item.productName}</h3>
-                      <p className="text-sm text-slate-500 mb-2">{item.category}</p>
-                      <p className="font-bold text-violet-700">GH₵{item.price.toFixed(2)}</p>
-                    </div>
-                    <div className="absolute top-6 right-6">
-                      <button 
-                        onClick={() => removeFromCart(item.productId)}
-                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                        title="Remove item"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="absolute bottom-6 right-6 flex items-center gap-3 bg-slate-100 rounded-lg px-2 py-1">
-                      <button 
-                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                        className="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-white rounded-md transition-colors"
-                      >
-                        -
-                      </button>
-                      <span className="text-sm font-semibold w-4 text-center">{item.quantity}</span>
-                      <button 
-                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                        className="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-white rounded-md transition-colors"
-                      >
-                        +
-                      </button>
+        <div className="mt-10 grid lg:grid-cols-[1fr_400px] gap-10 lg:gap-16 items-start">
+          <ul className="border-t border-line">
+            <AnimatePresence initial={false}>
+              {lines.map(({ product, quantity }) => (
+                <motion.li
+                  key={product.id}
+                  layout
+                  exit={{ opacity: 0, height: 0, transition: { duration: 0.25 } }}
+                  className="border-b border-line overflow-hidden"
+                >
+                  <div className="py-6 flex gap-5">
+                    <Link
+                      href={`/product/${product.id}`}
+                      className="relative size-28 md:size-36 shrink-0 rounded-[1.25rem] overflow-hidden"
+                      style={{ background: categoryTile(product.category) }}
+                    >
+                      <Image src={product.image} alt="" fill sizes="144px" className="object-contain p-3" />
+                    </Link>
+                    <div className="flex-1 min-w-0 flex flex-col">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-6">
+                        <div className="min-w-0">
+                          <p className="eyebrow">{product.brand ?? "EasyStore"}</p>
+                          <Link href={`/product/${product.id}`} className="block mt-1 text-lg font-medium leading-snug hover:underline underline-offset-4">
+                            {product.title}
+                          </Link>
+                          <p className="text-sm text-muted mt-1">{formatPrice(product.price)} each</p>
+                        </div>
+                        <Price price={product.price * quantity} compareAt={product.compareAt ? product.compareAt * quantity : null} />
+                      </div>
+                      <div className="mt-auto pt-4 flex flex-wrap items-center gap-4">
+                        <QuantityStepper value={quantity} max={product.stock} onChange={(q) => setQuantity(product.id, q)} size="sm" />
+                        <button
+                          className="text-sm text-muted hover:text-fg inline-flex items-center gap-1.5"
+                          onClick={() => {
+                            if (!saved.some((p) => p.id === product.id)) toggleSaved(product);
+                            remove(product.id);
+                            toast("Moved to saved", { description: product.title });
+                          }}
+                        >
+                          <Heart className="size-3.5" /> Save for later
+                        </button>
+                        <button
+                          className="text-sm text-muted hover:text-fg underline underline-offset-4"
+                          onClick={() => {
+                            remove(product.id);
+                            toast(`Removed ${product.title}`, { action: { label: "Undo", onClick: () => add(product, quantity) } });
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   </div>
-                ))}
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+
+          <aside className="lg:sticky lg:top-24 rounded-[1.75rem] bg-raised border border-line p-6 md:p-8">
+            <h2 className="display text-4xl">Summary</h2>
+            <dl className="mt-6 space-y-3 text-sm">
+              <div className="flex justify-between">
+                <dt>Subtotal</dt>
+                <dd className="tabular-nums">{formatPrice(subtotal)}</dd>
               </div>
-            ) : (
-              <div className="glass-card rounded-3xl p-6 md:p-8 space-y-8 bg-white/60">
-                <div className="flex items-center gap-4 mb-2">
-                  <button onClick={() => setIsCheckout(false)} className="p-2 bg-white rounded-full text-slate-600 hover:text-violet-700 hover:shadow-md transition-all">
-                    <ArrowLeft className="w-5 h-5" />
-                  </button>
-                  <h2 className="text-xl font-bold text-slate-800">Return to Cart</h2>
+              {savings > 0 && (
+                <div className="flex justify-between text-accent">
+                  <dt>Savings</dt>
+                  <dd className="tabular-nums">−{formatPrice(savings)}</dd>
                 </div>
-
-                <div className="space-y-8">
-                  {/* Customer Details */}
-                  <section>
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                      <User className="w-5 h-5 text-violet-600" /> Customer Details
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <input type="text" name="name" placeholder="Full Name *" value={checkoutData.name} onChange={handleInputChange} className={inputClasses} required />
-                      <input type="email" name="email" placeholder="Email Address *" value={checkoutData.email} onChange={handleInputChange} className={inputClasses} required />
-                      <input type="tel" name="phone" placeholder="Phone Number *" value={checkoutData.phone} onChange={handleInputChange} className={`md:col-span-2 ${inputClasses}`} required />
-                    </div>
-                  </section>
-
-                  {/* Delivery Method */}
-                  <section>
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                      <Truck className="w-5 h-5 text-violet-600" /> Delivery Method
-                    </h3>
-                    <div className="flex gap-4 mb-4">
-                      <label className={`flex-1 flex items-center justify-center gap-3 p-4 rounded-xl cursor-pointer border-2 transition-all ${deliveryMethod === 'delivery' ? 'border-violet-600 bg-violet-50 text-violet-900 shadow-sm' : 'border-slate-200 hover:border-violet-200 text-slate-600'}`}>
-                        <input type="radio" name="deliveryMethod" checked={deliveryMethod === 'delivery'} onChange={() => setDeliveryMethod('delivery')} className="hidden" />
-                        <Truck className="w-5 h-5" /> <span className="font-semibold">Delivery</span>
-                      </label>
-                      <label className={`flex-1 flex items-center justify-center gap-3 p-4 rounded-xl cursor-pointer border-2 transition-all ${deliveryMethod === 'pickup' ? 'border-violet-600 bg-violet-50 text-violet-900 shadow-sm' : 'border-slate-200 hover:border-violet-200 text-slate-600'}`}>
-                        <input type="radio" name="deliveryMethod" checked={deliveryMethod === 'pickup'} onChange={() => setDeliveryMethod('pickup')} className="hidden" />
-                        <Store className="w-5 h-5" /> <span className="font-semibold">Store Pickup</span>
-                      </label>
-                    </div>
-                    
-                    {deliveryMethod === 'delivery' && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 anim-fade-up">
-                        <input type="text" name="address" placeholder="Street Address *" value={checkoutData.address} onChange={handleInputChange} className={`md:col-span-2 ${inputClasses}`} required />
-                        <input type="text" name="city" placeholder="City *" value={checkoutData.city} onChange={handleInputChange} className={`md:col-span-2 ${inputClasses}`} required />
-                      </div>
-                    )}
-                  </section>
-
-                  {/* Payment Details */}
-                  <section>
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                      <CreditCard className="w-5 h-5 text-violet-600" /> Payment Details
-                    </h3>
-                    <div className="space-y-4">
-                      <input type="text" name="cardNumber" placeholder="Card Number *" maxLength={19} value={checkoutData.cardNumber} onChange={handleInputChange} className={inputClasses} required />
-                      <div className="grid grid-cols-2 gap-4">
-                        <input type="text" name="expiry" placeholder="MM/YY *" maxLength={5} value={checkoutData.expiry} onChange={handleInputChange} className={inputClasses} required />
-                        <input type="text" name="cvv" placeholder="CVV *" maxLength={4} value={checkoutData.cvv} onChange={handleInputChange} className={inputClasses} required />
-                      </div>
-                    </div>
-                  </section>
-                </div>
+              )}
+              <div className="flex justify-between">
+                <dt>Delivery (Accra)</dt>
+                <dd className="tabular-nums">{delivery ? formatPrice(delivery) : "Free"}</dd>
               </div>
-            )}
-          </div>
-
-          {/* Order Summary */}
-          <div className="w-full lg:w-80 anim-fade-up" style={{ animationDelay: "100ms" }}>
-            <div className="glass-card rounded-3xl p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-slate-900 mb-6">Order Summary</h2>
-              <div className="space-y-4 text-sm text-slate-600 mb-6">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span className="font-medium text-slate-900">GH₵{getSubtotal().toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span className="font-medium text-slate-900">{deliveryMethod === 'pickup' ? 'Free (Pickup)' : 'Free'}</span>
-                </div>
-                <div className="h-px w-full bg-slate-200 my-4" />
-                <div className="flex justify-between text-base">
-                  <span className="font-bold text-slate-900">Total</span>
-                  <span className="font-bold text-violet-700">GH₵{getSubtotal().toFixed(2)}</span>
-                </div>
+              {delivery > 0 && (
+                <p className="text-xs text-muted">
+                  Add {formatPrice(FREE_DELIVERY_THRESHOLD - subtotal)} more for free delivery.
+                </p>
+              )}
+              <div className="flex justify-between pt-4 mt-4 border-t border-line text-lg font-medium">
+                <dt>Total</dt>
+                <dd className="tabular-nums">{formatPrice(subtotal + delivery)}</dd>
               </div>
-              <button 
-                onClick={handleCheckout}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-xl font-semibold shadow-lg hover:bg-violet-600 hover:shadow-violet-200 transition-all duration-300"
-              >
-                {isCheckout ? "Place Order" : "Proceed to Checkout"} <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+            </dl>
+            <Link href="/checkout" className="btn btn-accent w-full h-14 mt-6 text-base">
+              Checkout <ArrowRight className="size-4" />
+            </Link>
+            <p className="mt-4 text-xs text-muted flex items-center justify-center gap-1.5">
+              <Lock className="size-3" /> MoMo, card on delivery or cash
+            </p>
+          </aside>
         </div>
       )}
-    </main>
+
+      {saved.length > 0 && (
+        <section className="mt-24">
+          <h2 className="display text-5xl mb-8">
+            Saved <em>for later</em>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10">
+            {saved.slice(0, 8).map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
   );
 }

@@ -1,108 +1,150 @@
-import { getProducts } from "@/lib/products";
-import Image from "next/image";
-import { Star, ShoppingCart, ArrowLeft, Truck, ShieldCheck, ArrowRightLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ProductActions from "./ProductActions";
+import { getProduct, getProducts, getRelated, toSummary } from "@/lib/catalog";
+import { categoryLabel, categoryTile } from "@/lib/categories";
+import ProductGallery from "@/components/product/ProductGallery";
+import PurchasePanel from "@/components/product/PurchasePanel";
+import ProductRail from "@/components/product/ProductRail";
+import { Rating } from "@/components/product/bits";
 
-export default async function ProductDetails({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
-  const products = await getProducts();
-  const product = products.find((p: any) => p.productId === parseInt(resolvedParams.id));
+export const dynamicParams = false;
 
-  if (!product) {
-    notFound();
-  }
+export function generateStaticParams() {
+  return getProducts().map((p) => ({ id: String(p.id) }));
+}
+
+export async function generateMetadata({ params }: PageProps<"/product/[id]">): Promise<Metadata> {
+  const product = getProduct(Number((await params).id));
+  if (!product) return {};
+  return {
+    title: product.title,
+    description: product.description,
+    openGraph: { images: [product.images[0] ?? product.thumbnail] },
+  };
+}
+
+export default async function ProductPage({ params }: PageProps<"/product/[id]">) {
+  const product = getProduct(Number((await params).id));
+  if (!product) notFound();
+
+  const summary = toSummary(product);
+  const tile = categoryTile(product.category);
+  const { width, height, depth } = product.dimensions;
+
+  const details = [
+    {
+      title: "Details",
+      rows: [
+        ["Brand", product.brand ?? "EasyStore"],
+        ["Category", categoryLabel(product.category)],
+        ["SKU", product.sku],
+        ["Dimensions", `${width} × ${height} × ${depth} cm`],
+        ["Weight", `${product.weight} kg`],
+      ] as [string, string][],
+    },
+    {
+      title: "Delivery & returns",
+      rows: [
+        ["Shipping", product.shippingInformation],
+        ["Returns", product.returnPolicy],
+        ["Minimum order", `${product.minimumOrderQuantity} unit${product.minimumOrderQuantity === 1 ? "" : "s"}`],
+      ] as [string, string][],
+    },
+    { title: "Warranty", rows: [["Coverage", product.warrantyInformation]] as [string, string][] },
+  ];
+
+  const distribution = [5, 4, 3, 2, 1].map((stars) => ({
+    stars,
+    count: product.reviews.filter((r) => Math.round(r.rating) === stars).length,
+  }));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    image: product.images,
+    description: product.description,
+    sku: product.sku,
+    brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
+    aggregateRating: { "@type": "AggregateRating", ratingValue: product.rating, reviewCount: product.reviews.length },
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "GHS",
+      price: product.price,
+      availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+    },
+  };
 
   return (
-    <main className="py-12 px-4 md:px-6 lg:px-8 max-w-6xl mx-auto min-h-[75vh]">
-      <Link href="/#products" className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-violet-700 transition-colors mb-10 no-underline">
-        <ArrowLeft className="w-4 h-4" /> Back to store
-      </Link>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-        {/* Product Image */}
-        <div className="anim-fade-up">
-          <div className="glass-card aspect-square rounded-[2rem] p-8 flex items-center justify-center relative overflow-hidden group">
-            <div className="absolute inset-0 bg-linear-to-tr from-violet-200/40 to-fuchsia-200/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            <Image 
-              src={product.imageUrl} 
-              alt={product.productName}
-              width={500}
-              height={500}
-              className="object-contain filter drop-shadow-2xl group-hover:scale-105 transition-transform duration-700 z-10"
-              priority
-            />
-          </div>
-        </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
-        {/* Product Info */}
-        <div className="flex flex-col anim-slide-up" style={{ animationDelay: "100ms" }}>
-          <div className="mb-2 flex items-center gap-2">
-            <span className="px-3 py-1 bg-violet-100 text-violet-700 text-xs font-bold rounded-full tracking-wide uppercase">
-              {product.category}
-            </span>
-            {!product.inStock && (
-              <span className="px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full tracking-wide uppercase">
-                Out of Stock
-              </span>
-            )}
-          </div>
-          
-          <h1 className="text-4xl lg:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
-            {product.productName}
-          </h1>
-          
-          <div className="flex items-center gap-4 mb-6">
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  className={`w-5 h-5 ${i < Math.floor(product.rating) ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"}`} 
-                />
-              ))}
-            </div>
-            <span className="text-sm font-semibold text-slate-700">{product.rating}</span>
-            <span className="text-sm text-slate-500">({product.reviewCount} reviews)</span>
-          </div>
-          
-          <p className="text-4xl font-bold text-violet-700 mb-8">
-            GH₵{product.price.toFixed(2)}
-          </p>
-          
-          <div className="prose prose-slate mb-10">
-            <p className="text-slate-600 leading-relaxed text-lg">
-              {product.description}
-            </p>
-          </div>
-          
-          <div className="mt-auto">
-            {/* Client Component for Add to Cart interactivity */}
-            <ProductActions product={product} />
-          </div>
+      <div className="container-x pt-6 md:pt-8">
+        <nav aria-label="Breadcrumb" className="text-sm text-muted mb-6 flex flex-wrap gap-x-2">
+          <Link href="/shop" className="hover:text-fg">
+            Shop
+          </Link>
+          <span>/</span>
+          <Link href={`/collections/${product.category}`} className="hover:text-fg">
+            {categoryLabel(product.category)}
+          </Link>
+          <span>/</span>
+          <span className="text-fg truncate max-w-[50vw]">{product.title}</span>
+        </nav>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 pt-8 border-t border-slate-200">
-            <div className="flex flex-col items-center text-center gap-2">
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-600">
-                <Truck className="w-5 h-5" />
-              </div>
-              <span className="text-xs font-medium text-slate-600">Free Worldwide<br/>Shipping</span>
-            </div>
-            <div className="flex flex-col items-center text-center gap-2">
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-600">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <span className="text-xs font-medium text-slate-600">Secure<br/>Payments</span>
-            </div>
-            <div className="flex flex-col items-center text-center gap-2">
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-600">
-                <ArrowRightLeft className="w-5 h-5" />
-              </div>
-              <span className="text-xs font-medium text-slate-600">30-Day<br/>Returns</span>
-            </div>
+        <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 lg:gap-16 items-start">
+          <div className="lg:sticky lg:top-24">
+            <ProductGallery images={product.images.length ? product.images : [product.thumbnail]} title={product.title} tile={tile} />
           </div>
+          <PurchasePanel product={summary} description={product.description} details={details} />
         </div>
       </div>
-    </main>
+
+      <section id="reviews" className="container-x mt-24 md:mt-32 scroll-mt-24">
+        <div className="grid lg:grid-cols-[1fr_2fr] gap-12">
+          <div>
+            <p className="eyebrow mb-3">Reviews</p>
+            <p className="display text-8xl tabular-nums">{product.rating.toFixed(1)}</p>
+            <div className="mt-2">
+              <Rating value={product.rating} count={product.reviews.length} size="md" />
+            </div>
+            <ul className="mt-8 space-y-2 max-w-xs">
+              {distribution.map(({ stars, count }) => (
+                <li key={stars} className="flex items-center gap-3 text-sm">
+                  <span className="w-3 tabular-nums">{stars}</span>
+                  <span className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
+                    <span
+                      className="block h-full bg-fg rounded-full"
+                      style={{ width: `${product.reviews.length ? (count / product.reviews.length) * 100 : 0}%` }}
+                    />
+                  </span>
+                  <span className="w-4 text-muted tabular-nums text-right">{count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <ul className="divide-y divide-line border-y border-line">
+            {product.reviews.map((r, i) => (
+              <li key={i} className="py-8 grid sm:grid-cols-[180px_1fr] gap-3 sm:gap-8">
+                <div>
+                  <p className="font-medium">{r.reviewerName}</p>
+                  <p className="text-xs text-muted mt-1">
+                    {new Date(r.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })}
+                  </p>
+                </div>
+                <div>
+                  <Rating value={r.rating} />
+                  <p className="display text-3xl mt-3">“{r.comment}”</p>
+                  <p className="text-xs text-success mt-3">✓ Verified purchase</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <ProductRail eyebrow="Keep browsing" title={<>You might <em>also like</em></>} products={getRelated(product)} href={`/collections/${product.category}`} />
+    </>
   );
 }

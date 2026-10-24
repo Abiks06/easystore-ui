@@ -1,39 +1,27 @@
-import { getProducts } from "@/lib/products";
-import ProductCard from "@/components/Home/ProductCard";
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import ShopExplorer from "@/components/shop/ShopExplorer";
+import { getSummaries } from "@/lib/catalog";
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "Shop everything",
+  description: "Browse the full EasyStore catalogue. Filter by category, brand, price and rating.",
+};
 
-export default async function ShopPage() {
-  const products = await getProducts();
+export default function ShopPage() {
+  const products = getSummaries();
 
   return (
-    <main className="py-20 px-6 max-w-7xl mx-auto min-h-screen">
-      <div className="mb-12 text-center anim-fade-up">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
-          All Products
+    <>
+      <header className="container-x pt-12 pb-10 md:pt-16 md:pb-14">
+        <p className="eyebrow mb-4">The whole shop · {products.length} products</p>
+        <h1 className="display text-7xl md:text-9xl">
+          Everything, <em>all at once.</em>
         </h1>
-        <p className="text-lg text-slate-500">
-          Browse our entire catalog of premium items.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {products.map((product, idx) => (
-          <div 
-            key={product.productId} 
-            className="anim-slide-up"
-            style={{ animationDelay: `${(idx % 12) * 50}ms` }}
-          >
-            <ProductCard product={product} />
-          </div>
-        ))}
-      </div>
-
-      {products.length === 0 && (
-        <div className="text-center py-20">
-          <p className="text-slate-500 text-lg">No products found.</p>
-        </div>
-      )}
-    </main>
+      </header>
+      <Suspense fallback={<div className="container-x h-[60vh]" />}>
+        <ShopExplorer products={products} />
+      </Suspense>
+    </>
   );
 }

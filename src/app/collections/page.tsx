@@ -1,57 +1,79 @@
-import { getProducts } from "@/lib/products";
-import ProductCard from "@/components/Home/ProductCard";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { getCategories, getSummaries } from "@/lib/catalog";
+import { formatPrice } from "@/lib/format";
+import Reveal from "@/components/ui/Reveal";
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "Collections",
+  description: "Eleven small, carefully edited collections — from beauty to laptops.",
+};
 
-export default async function CollectionsPage() {
-  const products = await getProducts();
-  
-  // Group products by category
-  const groupedProducts = products.reduce((acc: any, product) => {
-    if (!acc[product.category]) acc[product.category] = [];
-    acc[product.category].push(product);
-    return acc;
-  }, {});
-
-  const categories = Object.keys(groupedProducts).sort();
+export default function CollectionsPage() {
+  const categories = getCategories();
+  const products = getSummaries();
 
   return (
-    <main className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
-      <div className="mb-16 text-center anim-fade-up">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
-          Collections
-        </h1>
-        <p className="text-lg text-slate-500">
-          Explore our products organized by category.
-        </p>
-      </div>
-
-      {categories.map((category, idx) => (
-        <div key={category} className="mb-24 anim-slide-up" style={{ animationDelay: `${idx * 100}ms` }}>
-          <div className="flex items-center justify-between mb-8 border-b border-slate-200 pb-4">
-            <h2 className="text-3xl font-bold text-slate-900 capitalize tracking-tight">
-              {category.replace("-", " ")}
-            </h2>
-            <span className="text-sm font-medium px-3 py-1 bg-violet-100 text-violet-700 rounded-full">
-              {groupedProducts[category].length} items
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {groupedProducts[category].slice(0, 4).map((product: any) => (
-              <ProductCard key={product.productId} product={product} />
-            ))}
-          </div>
-          
-          {groupedProducts[category].length > 4 && (
-            <div className="mt-8 text-center">
-              <a href={`/collections/${encodeURIComponent(category)}`} className="inline-flex items-center justify-center px-6 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
-                View more {category.replace("-", " ")}
-              </a>
-            </div>
-          )}
+    <div className="container-x pt-12 md:pt-16">
+      <header className="mb-14 grid md:grid-cols-2 gap-6 items-end">
+        <div>
+          <p className="eyebrow mb-4">{categories.length} collections</p>
+          <h1 className="display text-7xl md:text-9xl">
+            Pick an <em>aisle.</em>
+          </h1>
         </div>
-      ))}
-    </main>
+        <p className="text-lg text-muted max-w-md md:justify-self-end">
+          Each collection is deliberately small. Fewer choices, better ones, and no scrolling through forty versions of the same thing.
+        </p>
+      </header>
+
+      <ul className="border-t border-line">
+        {categories.map((c, i) => {
+          const items = products.filter((p) => p.category === c.slug);
+          const from = Math.min(...items.map((p) => p.price));
+          return (
+            <Reveal as="li" key={c.slug} delay={Math.min(i, 4) * 0.04}>
+              <Link href={`/collections/${c.slug}`} className="group grid grid-cols-[auto_1fr_auto] md:grid-cols-[4rem_1fr_auto_auto] items-center gap-4 md:gap-8 py-6 border-b border-line">
+                <span className="hidden md:block font-mono text-xs text-muted tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                <span className="relative size-16 md:hidden rounded-2xl overflow-hidden" style={{ background: c.tile }}>
+                  <Image src={c.cover} alt="" fill sizes="64px" className="object-contain p-2" />
+                </span>
+                <span>
+                  <span className="display text-4xl md:text-7xl block transition-transform duration-500 ease-out-expo group-hover:translate-x-3">
+                    {c.label}
+                  </span>
+                  <span className="text-sm text-muted md:hidden">
+                    {c.count} items · from {formatPrice(from)}
+                  </span>
+                </span>
+                <span className="hidden md:flex items-center gap-3 -my-4">
+                  {items.slice(0, 3).map((p, j) => (
+                    <span
+                      key={p.id}
+                      className="relative size-20 rounded-2xl overflow-hidden opacity-0 translate-y-3 transition-all duration-500 ease-out-expo group-hover:opacity-100 group-hover:translate-y-0"
+                      style={{ background: c.tile, transitionDelay: `${j * 50}ms` }}
+                    >
+                      <Image src={p.image} alt="" fill sizes="80px" className="object-contain p-2" />
+                    </span>
+                  ))}
+                </span>
+                <span className="flex items-center gap-4">
+                  <span className="hidden md:block text-sm text-muted text-right">
+                    {c.count} items
+                    <br />
+                    from {formatPrice(from)}
+                  </span>
+                  <span className="size-12 rounded-full border border-line grid place-items-center transition-colors group-hover:bg-accent group-hover:border-accent group-hover:text-accent-fg">
+                    <ArrowUpRight className="size-5" />
+                  </span>
+                </span>
+              </Link>
+            </Reveal>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
