@@ -6,5 +6,32 @@
     "A ⌘K command palette over every product and collection, a slide-out bag with undo and save-for-later, and product galleries with hover zoom and swipe on mobile.",
     "All 100 product pages and 11 collections are prerendered with per-page metadata, JSON-LD and a sitemap; dark mode follows the system and never flashes on load."
   ],
-  "keywords": ["Next.js", "React", "TypeScript", "Tailwind CSS", "Zustand", "Framer Motion"]
+  "keywords": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Zustand",
+    "Framer Motion"
+  ],
+  "tracks": [
+    "fullstack"
+  ],
+  "metrics": [
+    {
+      "value": "100",
+      "label": "product pages prerendered, plus 11 collections"
+    },
+    {
+      "value": "3",
+      "label": "mobile money providers at checkout"
+    }
+  ],
+  "decisions": [
+    {
+      "choice": "Keep every shop filter in the URL",
+      "over": "Client-only filter state",
+      "because": "Results can be shared and survive a reload."
+    }
+  ]
 }
